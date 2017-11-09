@@ -1,0 +1,427 @@
+﻿ DROP TABLE CELLARIII;
+ CREATE TABLE CELLARIII
+ (BIN INTEGER,
+ WINE VARCHAR(30),
+ PRODUCER VARCHAR(30),
+ YEAR INTEGER,
+ BOTTLES VARCHAR(30),
+ READY VARCHAR(30),
+ COMMENTS VARCHAR(30));
+ 
+INSERT INTO CELLARIII
+Values(2,'Chardonnay','Buena Vista',79,1,82,'');
+ 
+INSERT INTO CELLARIII
+Values(3,'Chardonnay','Louis Martini',79,5,82,'');
+ 
+INSERT INTO CELLARIII
+Values(6,'Chardonnay','Chappellet',79,4,82,'Thanksgiving');
+ 
+INSERT INTO CELLARIII
+Values(11,'Riesling','Jekel Vineyard',80,6,82,'');
+ 
+INSERT INTO CELLARIII
+Values(12,'Riesling','Buena Vista',77,1,80,'Late Harvest');
+ 
+INSERT INTO CELLARIII
+Values(16,'Riesling','Sattui',79,1,81,'very dry');
+ 
+INSERT INTO CELLARIII
+Values(21,'Fume Blanc','Ch.St.Jean',79,4,81,'Napa Valley');
+ 
+INSERT INTO CELLARIII
+Values(22,'Fume Blanc','Robt. Mondavi',77,2,80,'');
+
+INSERT INTO CELLARIII
+Values(25,'Wh.Burgundy','Mirassou',80,6,82,'');
+
+INSERT INTO CELLARIII
+Values(30,'Gewurztraminer','Buena Vista',80,3,82,'');
+
+INSERT INTO CELLARIII
+Values(43,'Cab.Sauvignon','Robt.Mondavi',77,12,83,'');
+
+INSERT INTO CELLARIII
+Values(50,'Pinot Noir','Mirassou',77,3,82,'Harvest Sel.');
+
+INSERT INTO CELLARIII
+Values(51,'Pinot Noir','Ch.St.Jean',78,2,84,'');
+
+INSERT INTO CELLARIII
+Values(64,'Zinfadel','Mirassou',77,2,84,'Anniversary');
+
+INSERT INTO CELLARIII
+Values(72,'Camay','Robt.Mondavi',78,2,82,'');
+
+/*NR 26*/
+SELECT WINE, PRODUCER
+FROM CELLARIII
+WHERE BIN=72;
+
+/*Es werden alle Weine und Hersteller angezeigt, wo die Flaschennummer 72 beträgt */
+
+SELECT WINE, PRODUCER
+FROM CELLARIII
+WHERE YEAR >81;
+
+/*ES werden alles Weine angezeigt die älter als 81 Jahr alt sind*/
+
+SELECT BIN, WINE, YEAR
+FROM CELLARIII
+WHERE READY <83;
+
+/*ES wird die Flaschennummer, Wein und Jahr angezeit, die vor dem Jahr 1983 reif sind */
+
+SELECT BIN, WINE YEAR
+FROM CELLARIII
+WHERE (PRODUCER = 'Buena Vista') AND (BOTTLES >1);
+/*ES wird die Flaschennummer, Wein und Jahr angezeigt, des Hersteller Buena Vista angezeigt, von denen mehr als eine Flasche auf Lager ist */
+
+
+/*NR 27*/
+SELECT BIN, WINE, BOTTLES
+FROM CELLARIII
+WHERE (PRODUCER = 'Mirassou');
+
+/*Zeige alles Weine und Hersteller und Flaschen von der Tabelle CELLARIII wo der Hersteller Mirassou ist*/
+
+/*SELECT Roseweine -> Informationen reichen nicht aus */
+
+SELECT BIN, WINE
+FROM CELLARIII
+WHERE (BOTTLES > 5);
+
+/*NR 28*/
+
+INSERT INTO CELLARIII
+VALUES (80, 'MERLOT','Clos du Bois',78,12,85,'Christmas');
+
+DELETE FROM CELLARIII
+WHERE READY >84;
+
+UPDATE CELLARIII
+SET BOTTLES = 10
+WHERE BIN = 43;
+
+UPDATE CELLARIII
+SET BOTTLES = BOTTLES - 2
+WHERE BIN = 43;
+
+/*NR 29*/
+
+UPDATE CELLARIII
+SET Bottles = Bottles + 30
+WHERE BIN = 30;
+
+DELETE FROM CELLARIII
+WHERE WINE = 'Chardonnay';
+
+
+INSERT INTO CELLARIII 
+VALUES(5,'CHardonnnay','',84,12,'fertig in 1988','Ist prize');
+
+
+DROP TABLE S;
+DROP TABLE P;
+DROP TABLE J;
+DROP TABLE SPJ;
+
+CREATE TABLE S
+(SNO VARCHAR (30),
+SNAME VARCHAR (30),
+STATUS INTEGER,
+CITY VARCHAR (30));
+
+CREATE TABLE P
+(PNO VARCHAR (30),
+PNAME VARCHAR (30),
+COLOR VARCHAR (30),
+WEIGHT INTEGER,
+CITY VARCHAR (30));
+
+CREATE TABLE J
+(JNO VARCHAR (30),
+JNAME VARCHAR (30),
+CITY VARCHAR (30));
+
+CREATE TABLE SPJ
+(SNO VARCHAR (30),
+PNO VARCHAR (30),
+JNO VARCHAR (30),
+QTY VARCHAR (30));
+
+INSERT INTO S
+VALUES ('S1','Smith',20,'London');
+
+INSERT INTO S
+VALUES ('S2','Jones',10,'Paris');
+
+INSERT INTO S
+VALUES ('S3','Blake',30,'Paris');
+
+INSERT INTO S
+VALUES ('S4','Clark',20,'London');
+
+INSERT INTO S
+VALUES ('S5','Adams',30,'Athens');
+
+
+INSERT INTO P
+VALUES ('P1','Nut','Red',12,'London');
+
+INSERT INTO P
+VALUES ('P2','Bolt','Green',17,'Paris');
+
+INSERT INTO P
+VALUES ('P3','Screw','Blue',17,'Rome');
+
+INSERT INTO P
+VALUES ('P4','Screw','Red',14,'London');
+
+INSERT INTO P
+VALUES ('P5','Cam','Blue',12,'Paris');
+
+INSERT INTO P
+VALUES ('P6','Coq','Red',19,'London');
+
+
+INSERT INTO J
+VALUES ('J1','Sorter','Paris');
+
+INSERT INTO J
+VALUES ('J2','Punch','Rome');
+
+INSERT INTO J
+VALUES ('J3','Reader','Athens');
+
+INSERT INTO J
+VALUES ('J4','Console','Athens');
+
+INSERT INTO J
+VALUES ('J5','Collator','London');
+
+INSERT INTO J
+VALUES ('J6','Terminal','Oslo');
+
+INSERT INTO J
+VALUES ('J7','Tape','London');
+
+
+INSERT INTO SPJ
+VALUES ('S1','P1','J1',200);
+
+INSERT INTO SPJ
+VALUES ('S1','P1','J4',700);
+
+INSERT INTO SPJ
+VALUES ('S2','P3','J1',400);
+
+INSERT INTO SPJ
+VALUES ('S2','P3','J2',200);
+
+INSERT INTO SPJ
+VALUES ('S2','P3','J3',200);
+
+INSERT INTO SPJ
+VALUES ('S2','P3','J4',500);
+
+INSERT INTO SPJ
+VALUES ('S2','P3','J5',600);
+
+INSERT INTO SPJ
+VALUES ('S2','P3','J6',400);
+
+INSERT INTO SPJ
+VALUES ('S2','P3','J7',800);
+
+INSERT INTO SPJ
+VALUES ('S2','P5','J2',100);
+
+INSERT INTO SPJ
+VALUES ('S3','P3','J1',200);
+
+INSERT INTO SPJ
+VALUES ('S3','P4','J2',500);
+
+INSERT INTO SPJ
+VALUES ('S4','P6','J3',300);
+
+INSERT INTO SPJ
+VALUES ('S4','P6','J7',300);
+
+INSERT INTO SPJ
+VALUES ('S5','P2','J2',200);
+
+INSERT INTO SPJ
+VALUES ('S5','P2','J4',100);
+
+
+INSERT INTO SPJ
+VALUES ('S5','P5','J4',500);
+
+INSERT INTO SPJ
+VALUES ('S5','P5','J7',100);
+
+INSERT INTO SPJ
+VALUES ('S5','P6','J2',200);
+
+INSERT INTO SPJ
+VALUES ('S5','P1','J4',100);
+
+INSERT INTO SPJ
+VALUES ('S5','P3','J4',200);
+
+INSERT INTO SPJ
+VALUES ('S5','P4','J4',800);
+
+INSERT INTO SPJ
+VALUES ('S5','P5','J4',400);
+
+INSERT INTO SPJ
+VALUES ('S5','P6','J4',500);
+
+
+/*Aufgabe 18 Händisch aufgeschrieben, Abfragen noch in RELAX ausprobieren*/
+
+
+
+/*Aufgabe 30*/
+
+SELECT COUNT (DISTINCT PNO)
+FROM SPJ;
+
+SELECT SUM(QTY)/COUNT(DISTINCT PNO)
+FROM SPJ;
+
+SELECT PNO, SUM(QTY), SUM(QTY)/COUNT(DISTINCT PNO)
+FROM SPJ
+GROUP BY PNO;
+
+SELECT PNO, SUM(QTY)
+FROM SPJ
+GROUP BY PNO
+HAVING SUM(QTY)>(SUM(QTY)/COUNT(DISTINCT PNO));
+
+SELECT PNO, MAX(QTY)
+FROM SPJ;
+
+/*GROUP BY fehlt!
+
+Lösung:
+SELECT PNO, MAX(QTY)
+FROM SPJ
+GROUP BY PNO;
+
+*/
+
+
+/*Aufgabe 31*/
+
+SELECT SNO, SUM(QTY), AVG(QTY)
+FROM SPJ
+GROUP BY SNO;
+
+SELECT SNO, MAX(QTY), MIN(QTY)
+FROM SPJ
+WHERE SNO = 'S1'
+GROUP BY SNO;
+
+SELECT SNO, SUM(QTY)
+FROM SPJ
+GROUP BY SNO
+HAVING SUM(QTY)>1000;
+
+SELECT PNO, SUM(QTY)
+FROM SPJ
+GROUP BY PNO;
+
+SELECT SNO, SUM(QTY) 
+FROM SPJ
+GROUP BY SNO
+HAVING SUM(QTY)>AVG(QTY);
+
+/*Aufgabe 32*/
+
+INSERT INTO S
+VALUES ('S6','Steward',NULL,'');
+
+SELECT *
+FROM S
+WHERE CITY IS NULL;
+
+SELECT SNO, SNAME, STATUS, CITY
+FROM S
+WHERE CITY <> 'London';
+
+SELECT COUNT (CITY)
+FROM S
+WHERE CITY IS NULL;
+/*Begründung: Müsste eigentlich 1 sein. Warum nicht?*/
+
+SELECT COUNT (*)
+FROM S
+WHERE CITY IS NULL;
+/*Ergebnis: 1, Weil nur ein Stadt unbekannt ist*/
+
+SELECT COUNT (SNAME)
+FROM S
+WHERE CITY IS NULL;
+/*Ergebnis: 1, Weil nur ein Stadt unbekannt ist*/
+
+SELECT SNO
+FROM S
+WHERE CITY IN (SELECT CITY FROM J WHERE JNO='J8');
+/*JNO=J8 nicht vorhanden*/
+
+SELECT JNAME 
+FROM J
+WHERE CITY NOT IN (SELECT CITY FROM S);
+/*Begründung*/
+
+SELECT JNO
+FROM J
+WHERE CITY NOT IN (SELECT CITY FROM S);
+/*Begründung*/
+
+DELETE FROM S WHERE CITY=NULL;
+/*Funktioniert nicht wergen = 
+Lösung:
+
+DELETE FROM S 
+WHERE CITY IS NULL
+*/
+
+UPDATE S
+SET STATUS = STATUS + 5
+WHERE SNO IN (SELECT SNO 
+                FROM SPJ
+                GROUP BY SNO
+                HAVING COUNT (*) >3);
+                
+UPDATE S
+SET STATUS = STATUS + (SELECT MAX(QTY)/10
+FROM SPJ 
+GROUP BY SNO HAVING
+S.SNO=SPJ.SNO)
+WHERE CITY = 'London';
+
+CREATE TABLE CHG
+(OLD VARCHAR (30)
+NEW VARCHAR (30));
+
+INSERT INTO CHG
+VALUES ('S1',N1);
+
+INSERT INTO CHG
+VALUES ('S2',N2);
+
+
+UPDATE S
+SET SNO = (SELECT NEW
+	FROM CHG
+	WHERE S.SNO = CHG.OLD)
+WHERE SNO IN (SELECT OLD FROM CHG);
+
+
+
+
