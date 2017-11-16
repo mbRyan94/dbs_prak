@@ -1,0 +1,70 @@
+DROP TABLE Familienbaum;
+
+CREATE TABLE Familienbaum
+(Name VARCHAR (30),
+Geschlecht VARCHAR (30),
+Gebohren Integer,
+Gestorben Integer,
+Vater VARCHAR (30),
+Mutter VARCHAR (30));
+
+INSERT INTO Familienbaum
+Values('Albert','M',1917,1966,'','' );
+
+INSERT INTO Familienbaum
+Values('Anna','F',1923,2003,'','');
+
+INSERT INTO Familienbaum
+Values('Hans','M',1940,1982,'Albert','Anna');
+
+INSERT INTO Familienbaum
+Values('Maria','F',1946,NULL,'','');
+
+INSERT INTO Familienbaum
+Values('Rudolf','M',1950,NULL,'Albert','Anna');
+
+INSERT INTO Familienbaum
+Values('Wilhelm','M',1942,2015,'','');
+
+INSERT INTO Familienbaum
+Values('Dagmar','F',1945,NULL,'Albert','Anna');
+
+INSERT INTO Familienbaum
+Values('Markus','M',1965,NULL,'Hans','Maria');
+
+INSERT INTO Familienbaum
+Values('Ute','F',1970,NULL,'','');
+
+INSERT INTO Familienbaum
+Values('Silke','F',1968,NULL,'Hans','Maria');
+
+INSERT INTO Familienbaum
+Values('Thomas','M',1966,NULL,'','');
+
+INSERT INTO Familienbaum
+Values('Anke','F',1974,NULL,'Wilhelm','Dagmar');
+
+INSERT INTO Familienbaum
+Values('Till','M',1971,NULL,'','');
+
+INSERT INTO Familienbaum 
+VALUES ('Sven', 'M', 1995, Null, 'Markus', 'Ute');
+
+INSERT INTO Familienbaum 
+VALUES ('Olaf', 'M', 1997, Null, 'Markus', 'Ute');
+
+INSERT INTO Familienbaum 
+VALUES ('Sonja', 'F', 1988, Null, 'Thomas', 'Silke');
+
+INSERT INTO Familienbaum 
+VALUES ('Andreas', 'M', 1994, Null, 'Thomas', 'Silke');
+
+INSERT INTO Familienbaum 
+VALUES ('Tom', 'M', 2000, Null, 'Till', 'Anke');
+
+INSERT INTO Familienbaum 
+VALUES ('Tim', 'M', 2004, Null, 'Till', 'Anke');
+
+INSERT INTO Familienbaum 
+VALUES ('Tina', 'F', 2010, Null, 'Till', 'Anke');
+
