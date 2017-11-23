@@ -47,24 +47,73 @@ Values('Anke','F',1974,NULL,'Wilhelm','Dagmar');
 INSERT INTO Familienbaum
 Values('Till','M',1971,NULL,'','');
 
-INSERT INTO Familienbaum 
+INSERT INTO Familienbaum
 VALUES ('Sven', 'M', 1995, Null, 'Markus', 'Ute');
 
-INSERT INTO Familienbaum 
+INSERT INTO Familienbaum
 VALUES ('Olaf', 'M', 1997, Null, 'Markus', 'Ute');
 
-INSERT INTO Familienbaum 
+INSERT INTO Familienbaum
 VALUES ('Sonja', 'F', 1988, Null, 'Thomas', 'Silke');
 
-INSERT INTO Familienbaum 
+INSERT INTO Familienbaum
 VALUES ('Andreas', 'M', 1994, Null, 'Thomas', 'Silke');
 
-INSERT INTO Familienbaum 
+INSERT INTO Familienbaum
 VALUES ('Tom', 'M', 2000, Null, 'Till', 'Anke');
 
-INSERT INTO Familienbaum 
+INSERT INTO Familienbaum
 VALUES ('Tim', 'M', 2004, Null, 'Till', 'Anke');
 
-INSERT INTO Familienbaum 
+INSERT INTO Familienbaum
 VALUES ('Tina', 'F', 2010, Null, 'Till', 'Anke');
 
+/*-----------------------------------------------*/
+/*--------------Start der Abfragen---------------*/
+/*-----------------------------------------------*/
+
+/*Aufg.1*/
+SELECT NAME
+FROM FAMILIENBAUM
+WHERE Geschlecht = 'F' and Mutter = (SELECT NAME
+FROM Familienbaum
+WHERE NAME = (SELECT Name
+                FROM Familienbaum
+                WHERE Vater = 'Hans' and Mutter = 'Maria' and Geschlecht = 'F'));
+
+
+/*Aufg.2*/
+SELECT Vater
+FROM Familienbaum
+WHERE Name = (SELECT NAME
+FROM FAMILIENBAUM
+WHERE Geschlecht = 'F' and Mutter = (SELECT NAME
+FROM Familienbaum
+WHERE NAME = (SELECT Name
+                FROM Familienbaum
+                WHERE Vater = 'Hans' and Mutter = 'Maria' and Geschlecht = 'F')));
+
+/*Aufg.3 - nochmal anschauen*/
+SELECT Name, max(Gestorben - Gebohren) as Lebenszeit
+FROM FAMILIENBAUM
+WHERE Gestorben is not null
+GROUP BY Name
+ORDER BY Lebenszeit DESC;
+
+/*Aufg.4*/
+SELECT  Count(Geschlecht) as Anz_Frauen, (SELECT Count(Geschlecht) as Anz_Maenner
+FROM Familienbaum
+WHERE Geschlecht = 'M') as Anz_Maenner
+FROM Familienbaum
+WHERE Geschlecht = 'F'
+Group by geschlecht;
+
+/*Aufg.5 - Group by noch überarbeiten*/
+SELECT COUNT(GEBOHREN) AS Siebziger, (SELECT COUNT(GEBOHREN)
+FROM FAMILIENBAUM
+WHERE GEBOHREN >=1980 AND GEBOHREN <1990) AS Achtziger, (SELECT COUNT(GEBOHREN)
+FROM FAMILIENBAUM
+WHERE GEBOHREN >=1990 AND GEBOHREN <2000) AS Neunziger
+FROM FAMILIENBAUM
+WHERE GEBOHREN >=1970 AND GEBOHREN <1980
+GROUP BY Name;
