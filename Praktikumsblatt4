@@ -119,10 +119,46 @@ WHERE GEBOHREN >=1970 AND GEBOHREN <1980
 GROUP BY Name;
 
 /*Aufg.6*/
-SELECT NAME 
+SELECT NAME
 FROM Familienbaum
 WHERE Mutter = (SELECT NAME
 FROM Familienbaum
 WHERE Mutter = 'Maria' and Geschlecht = 'F') or Vater = (SELECT NAME
 FROM Familienbaum
 WHERE Mutter = 'Maria' and Geschlecht = 'M');
+
+/*Aufg.7*/
+/*Ebene 1*/
+SELECT NAME
+FROM Familienbaum
+WHERE Vater = 'Albert';
+
+/*Ebene2*/
+SELECT NAME
+FROM Familienbaum
+WHERE Vater in (SELECT NAME
+FROM Familienbaum
+WHERE Vater = 'Albert') or Mutter in (SELECT NAME
+FROM Familienbaum
+WHERE Vater = 'Albert');
+
+/*Ebene3 - Enkelkinder - Ebenen können auch mit UNION verknüpft werden*/
+SELECT NAME, GEBOHREN
+FROM Familienbaum
+WHERE Vater = 'Albert' or Mutter in (SELECT NAME
+                FROM Familienbaum
+                WHERE Vater in (SELECT NAME
+                FROM Familienbaum
+                WHERE Vater = 'Albert') or Mutter in (SELECT NAME
+                FROM Familienbaum
+                WHERE Vater = 'Albert')) or Vater in (SELECT NAME
+                            FROM Familienbaum
+                            WHERE Vater in (SELECT NAME
+                            FROM Familienbaum
+                            WHERE Vater = 'Albert') or Mutter in (SELECT NAME
+                            FROM Familienbaum
+                            WHERE Vater = 'Albert')) or Vater in (SELECT NAME
+                                    FROM Familienbaum
+                                    WHERE Vater = 'Albert') or Mutter in (SELECT NAME
+                                    FROM Familienbaum
+                                    WHERE Vater = 'Albert');
