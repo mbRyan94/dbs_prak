@@ -117,3 +117,12 @@ WHERE GEBOHREN >=1990 AND GEBOHREN <2000) AS Neunziger
 FROM FAMILIENBAUM
 WHERE GEBOHREN >=1970 AND GEBOHREN <1980
 GROUP BY Name;
+
+/*Aufg.6*/
+SELECT NAME 
+FROM Familienbaum
+WHERE Mutter = (SELECT NAME
+FROM Familienbaum
+WHERE Mutter = 'Maria' and Geschlecht = 'F') or Vater = (SELECT NAME
+FROM Familienbaum
+WHERE Mutter = 'Maria' and Geschlecht = 'M');
