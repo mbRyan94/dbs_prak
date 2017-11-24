@@ -81,18 +81,20 @@ WHERE NAME = (SELECT Name
                 FROM Familienbaum
                 WHERE Vater = 'Hans' and Mutter = 'Maria' and Geschlecht = 'F'));
 
-
 /*Aufg.2*/
 SELECT Vater
-FROM Familienbaum
+  FROM Familienbaum
 WHERE Name = (SELECT NAME
-FROM FAMILIENBAUM
-WHERE Geschlecht = 'F' and Mutter = (SELECT NAME
-FROM Familienbaum
-WHERE NAME = (SELECT Name
-                FROM Familienbaum
-                WHERE Vater = 'Hans' and Mutter = 'Maria' and Geschlecht = 'F')));
-
+              FROM FAMILIENBAUM
+              WHERE Geschlecht = 'F' and Mutter = (SELECT NAME
+                                                    FROM Familienbaum
+                                                    WHERE NAME = (SELECT Name
+                                                                  FROM Familienbaum 
+                                                                  WHERE Vater = (SELECT VATER
+                                                                                  FROM Familienbaum
+                                                                                  WHERE NAME = 'Markus') and Mutter = (SELECT Mutter
+                                                                                                                        FROM Familienbaum
+                                                                                                                        WHERE NAME = 'Markus') and Geschlecht = 'F')));
 /*Aufg.3 - nochmal anschauen*/
 SELECT Name, max(Gestorben - Gebohren) as Lebenszeit
 FROM FAMILIENBAUM
