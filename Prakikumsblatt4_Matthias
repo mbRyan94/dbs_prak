@@ -35,7 +35,7 @@ Select name, max(gestorben - gebohren) AS "alter",
 From Familienbaum
 group by name
 having max(gestorben-gebohren) = (Select max(gestorben-gebohren)
-            From Familienbaum);
+                                From Familienbaum);
 
 
 --#1.1 mit aggragatsfunktion und group by
@@ -60,7 +60,7 @@ Where gestorben - gebohren = (Select max (gestorben - gebohren)
 
 Select Geschlecht, count(*)
 From Familienbaum
-where Geschlecht = 'F' or Geschlecht ='M'
+--where Geschlecht = 'F' or Geschlecht ='M'
 Group by geschlecht;
 
 ----Statistik, wie viele Kinder in den 70er, den 80r und den 90er Jahren bebohren wurden
@@ -80,15 +80,15 @@ group by name;
 ---Warum bekomme ich nur 2 Zeilen ausgegeben
 
 
-Select count (*)as "1=70er, 2 =80er, 3=90er"
+Select '70' as jz, count (*)
 From Familienbaum
 Where Gebohren between 1970 and 1979
-union
-Select count (*)r
+union all--union all führt deduplizierung durch
+Select '80' as jz, count (*)
 From Familienbaum
 Where Gebohren between 1980 and 1989
-union
-Select count (*)
+union all--union all führt deduplizierung durch
+Select '90' as jz, count (*)
 From Familienbaum
 Where Gebohren between 1990 and 1999;
 
@@ -130,10 +130,10 @@ Where vater = (Select name
 Select name, gebohren
 From Familienbaum
 Where vater in (Select name
-                            From Familienbaum
-                          Where vater in (Select name
-                                            From Familienbaum
-                                            Where Vater = 'Albert'))
+                From Familienbaum
+                Where vater in (Select name
+                                From Familienbaum
+                                Where Vater = 'Albert'))
 union
 Select name, gebohren
 From Familienbaum
@@ -143,7 +143,6 @@ Where mutter in
                 Where vater in (Select name
                                 From Familienbaum
                                 Where Vater = 'Albert'))
-
 union
 Select name, gebohren
 From Familienbaum
@@ -153,7 +152,6 @@ Where mutter in
                 Where mutter in (Select name
                                 From Familienbaum
                                 Where Vater = 'Albert'))
-
 --zweite Ebene
 union
 Select name, gebohren
@@ -172,4 +170,4 @@ union
 Select name, gebohren
 From Familienbaum
 Where Vater = 'Albert'
-Order by GEBOHREN desc;
+order by gebohren desc;
