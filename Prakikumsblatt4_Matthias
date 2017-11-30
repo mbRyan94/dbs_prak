@@ -1,10 +1,10 @@
 --Nichten von Markus (Sonja)
-Select Name 
+Select Name
 From Familienbaum
 Where Geschlecht = 'F'And Mutter =
                 (Select Name
                 From Familienbaum
-                Where Geschlecht = 'F' And Mutter = 
+                Where Geschlecht = 'F' And Mutter =
                          (Select Mutter
                          From FAMILIENBAUM
                          Where Name = 'Markus'));
@@ -14,17 +14,17 @@ Where Geschlecht = 'F'And Mutter =
 Select Vater
 From Familienbaum
 Where Name = (
-        Select Name 
+        Select Name
         From Familienbaum
         Where Geschlecht = 'F'And Mutter =
                 (Select Name
                 From Familienbaum
-                Where Geschlecht = 'F' And Mutter = 
+                Where Geschlecht = 'F' And Mutter =
                          (Select Mutter
                          From FAMILIENBAUM
                          Where Name = 'Markus')));
-						 
-                         
+
+
 --Weches Familien-Mitglied hat am längsten gelebt
 
 --#1 mit aggragatsfunktion und group b
@@ -45,7 +45,7 @@ From Familienbaum
 group by name
 having max(gestorben-gebohren) = (Select  max(gestorben-gebohren)
             From Familienbaum);
-            
+
 -- #2ohne aggragatsfunktion und group by, dafür mit where
 
 Select name, (gestorben - gebohren)
@@ -55,14 +55,14 @@ Where gestorben - gebohren = (Select max (gestorben - gebohren)
 
 
 
-        
+
 --Wie viele Frauen und wie viele Männer gibt es in der Familie
 
 Select Geschlecht, count(*)
 From Familienbaum
 where Geschlecht = 'F' or Geschlecht ='M'
 Group by geschlecht;
-   
+
 ----Statistik, wie viele Kinder in den 70er, den 80r und den 90er Jahren bebohren wurden
 ----Warum ein Group by name? Ich habe doch gar keine Aggregatfunktion...
 
@@ -84,12 +84,12 @@ Select count (*)as "1=70er, 2 =80er, 3=90er"
 From Familienbaum
 Where Gebohren between 1970 and 1979
 union
-Select count (*)r 
-From Familienbaum 
+Select count (*)r
+From Familienbaum
 Where Gebohren between 1980 and 1989
 union
-Select count (*) 
-From Familienbaum 
+Select count (*)
+From Familienbaum
 Where Gebohren between 1990 and 1999;
 
 --- nochmal nachvollziehen
@@ -127,15 +127,15 @@ Where vater = (Select name
 
 
 ---unterste Ebene
-Select name
+Select name, gebohren
 From Familienbaum
 Where vater in (Select name
-                From Familienbaum
-                Where vater in (Select name
-                                From Familienbaum
-                                Where Vater = 'Albert'))
+                            From Familienbaum
+                          Where vater in (Select name
+                                            From Familienbaum
+                                            Where Vater = 'Albert'))
 union
-Select name
+Select name, gebohren
 From Familienbaum
 Where mutter in
                 (Select name
@@ -143,8 +143,9 @@ Where mutter in
                 Where vater in (Select name
                                 From Familienbaum
                                 Where Vater = 'Albert'))
+
 union
-Select name
+Select name, gebohren
 From Familienbaum
 Where mutter in
                 (Select name
@@ -152,28 +153,23 @@ Where mutter in
                 Where mutter in (Select name
                                 From Familienbaum
                                 Where Vater = 'Albert'))
+
 --zweite Ebene
 union
-Select name
+Select name, gebohren
 From Familienbaum
 Where mutter in (Select name
               From Familienbaum
               Where Vater = 'Albert')
 union
-Select name
+Select name, gebohren
 From Familienbaum
 Where vater in (Select name
               From Familienbaum
               Where Vater = 'Albert')
 --dritte Ebene
 union
-Select name
+Select name, gebohren
 From Familienbaum
-Where Vater = 'Albert';
-
-
-
-
-
-
-
+Where Vater = 'Albert'
+Order by GEBOHREN desc;
