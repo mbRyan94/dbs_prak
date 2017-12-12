@@ -1,0 +1,34 @@
+class ChristmasTree {
+  public static void main(String[] args) {
+
+    int eingabe = Integer.parseInt(args[0]);
+
+    if (eingabe < 3) {
+      System.out.print("zu klein\n");
+    } else {
+      //Baum
+      for (int i = 1; i < eingabe; i++) {
+        for (int whitespaces = 1; whitespaces < eingabe - i; whitespaces++) {
+          System.out.print(" ");
+        }
+        //((i*2)-1) Anzahl * zur eingabe, 1->1, 2->3, 3->5, 4->7 usw.
+        for (int stars = 1; stars <= ((i * 2) - 1); stars++) {
+          System.out.print("*");
+        }
+        System.out.print("\n");
+      }
+
+      //Baumstamm
+      int breite = (((eingabe / 10) * 2) + 1);//Algorithmus. 1-9->1, 10-19->3, 20-29->5 usw....
+
+      for (int whitespacesStamm = 1; whitespacesStamm < ((((eingabe * 2) - 1) / 2) - (breite / 2));
+          whitespacesStamm++) { //(eingabe*2)-1) = Anzahl Sterne letzt Zeile
+        System.out.print(" "); // :2 - breite 2
+      }
+      for (int baumStamm = 0; baumStamm < breite; baumStamm++) {
+        System.out.print("I");
+      }
+      System.out.print("\n");
+    }
+  }
+}
