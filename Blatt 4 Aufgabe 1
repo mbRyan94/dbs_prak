@@ -1,0 +1,60 @@
+class Chessboard {
+  public static void main(String[] args) {
+
+    int eingabe = Integer.parseInt(args[0]);
+
+    int zahl1 = 0;
+    int zahl2 = 0;
+
+    if (args.length == 3) {
+      zahl1 = Integer.parseInt(args[1]);
+      zahl2 = Integer.parseInt(args[2]);
+    }
+
+    for (int spalte = 1; spalte <= eingabe; spalte++) {
+
+      for (int zeile = 1; zeile <= eingabe; zeile++) {
+
+        if ((zeile == zahl2) && (spalte == zahl1)) {
+          System.out.print("X");
+          if (zeile < eingabe) {
+            System.out.print(" ");
+          }
+          continue;
+        }
+
+        if ((spalte % 2) != 0) {
+          if ((zeile % 2) != 0) {
+            System.out.print("-");
+            if (zeile < eingabe) {
+              System.out.print(" ");
+            }
+          }
+          if ((zeile % 2) == 0) {
+            System.out.print("+");
+            if (zeile < eingabe) {
+              System.out.print(" ");
+            }
+          }
+        }
+
+        if ((spalte % 2) == 0) {
+          if ((zeile % 2) == 0) {
+            System.out.print("-");
+            if (zeile < eingabe) {
+              System.out.print(" ");
+            }
+          }
+          if ((zeile % 2) != 0) {
+            System.out.print("+");
+            if (zeile < eingabe) {
+              System.out.print(" ");
+            }
+          }
+        }
+      }
+      System.out.print("\n");
+    }
+
+  }
+}
