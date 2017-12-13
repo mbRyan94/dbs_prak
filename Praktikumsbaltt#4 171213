@@ -1,0 +1,217 @@
+--Praktikumsblatt #4
+--Finden Sie alle Nichten von Markus
+-- warum geht nicht mutter or vater in...
+Select Name
+From Familienbaum
+where mutter in (Select Name
+                From Familienbaum
+                where  Mutter  = (Select  Mutter
+                                 from  FAMILIENBAUM
+                                 where Name = 'Markus'))
+or vater in (Select Name
+                From Familienbaum
+                where  Mutter  = (Select  Mutter
+                                 from  FAMILIENBAUM
+                                 where Name = 'Markus'))
+minus 
+
+Select name
+from Familienbaum
+where Vater = 'Markus';
+
+--Was müsste man zusätzlich modellieren, um den Schwager von
+--Markus bestimmen zu können?
+
+Select distinct Vater
+From Familienbaum
+where Name in
+(Select Name
+From Familienbaum
+where mutter in (Select Name
+                From Familienbaum
+                where  Mutter  = (Select  Mutter
+                                 from  FAMILIENBAUM
+                                 where Name = 'Markus'))
+or vater in (Select Name
+                From Familienbaum
+                where  Mutter  = (Select  Mutter
+                                 from  FAMILIENBAUM
+                                 where Name = 'Markus'))
+minus 
+--minus die eigenen Kinder
+Select name
+from Familienbaum
+where Vater = 'Markus'
+--minus die eigenen Geschwister
+minus 
+Select Name
+From Familienbaum
+where  Mutter  = (Select  Mutter
+                    from  FAMILIENBAUM
+                    where Name = 'Markus'));
+					
+--Welches Familien-Mitglied hat am längsten gelebt?
+--Könnte auch mit IN gemacht werden, macht aber keinen Sinn
+
+Select name, (gestorben-gebohren)
+From Familienbaum
+where gestorben-gebohren = (select max (gestorben - gebohren)
+From Familienbaum);  
+
+--Wie viele Frauen und wie viele Männer gibt es in der Familie.
+
+Select geschlecht, count (geschlecht)
+from Familienbaum
+where geschlecht = 'M'
+group by geschlecht
+union
+Select geschlecht, count (geschlecht)
+from Familienbaum
+where geschlecht = 'F'
+group by geschlecht;
+
+--Wie viele Frauen und wie viele Männer gibt es in der Familie.
+--Wie lasse ich mir die Ergebnisse in spalten ausgeben??
+Select count (*),
+    (Select count (*)
+    From Familienbaum
+    where Geschlecht = 'M')
+from Familienbaum
+Where Geschlecht = 'F'
+group by geschlecht;
+					
+--Erstellen Sie eine Statistik, wie viele Kinder in den 70er, den 80er und
+--den 90er Jahren geboren wurden.
+
+Select '70' , count (*)
+From Familienbaum
+Where gebohren between 1970 and 1979
+union all
+Select '80' , count (*)
+From Familienbaum
+Where gebohren between 1980 and 1989
+union all
+Select '90', count (*)
+From Familienbaum
+Where gebohren between 1990 and 1998;
+
+--Finden Sie alle Enkelkinder von Maria.
+Select name
+From Familienbaum
+Where mutter = (Select name
+            From Familienbaum
+            Where geschlecht = 'F' and mutter = 'Maria')
+union
+Select name
+From Familienbaum
+Where vater = (Select name
+            From Familienbaum
+            Where geschlecht = 'M' and mutter = 'Maria');
+
+---Finden Sie alle Nachkommen des Opa Albert, geordnet nach Alter (d.h.nach dem Jahrgang)
+
+
+---unterste Ebene
+Select name, gebohren
+From Familienbaum
+Where vater in (Select name
+                From Familienbaum
+                Where vater in (Select name
+                                From Familienbaum
+                                Where Vater = 'Albert'))
+union
+Select name, gebohren
+From Familienbaum
+Where mutter in
+                (Select name
+                From Familienbaum
+                Where vater in (Select name
+                                From Familienbaum
+                                Where Vater = 'Albert'))
+union
+Select name, gebohren
+From Familienbaum
+Where mutter in
+                (Select name
+                From Familienbaum
+                Where mutter in (Select name
+                                From Familienbaum
+                                Where Vater = 'Albert'))
+--zweite Ebene
+union
+Select name, gebohren
+From Familienbaum
+Where mutter in (Select name
+              From Familienbaum
+              Where Vater = 'Albert')
+union
+Select name, gebohren
+From Familienbaum
+Where vater in (Select name
+              From Familienbaum
+              Where Vater = 'Albert')
+--dritte Ebene
+union
+Select name, gebohren
+From Familienbaum
+Where Vater = 'Albert'
+order by gebohren desc;
+
+-- 2. Zeigen Sie alle Vorfahren von Anke! In der Datenbank nicht erfasste Vorfahren sollen als "unbekannt" angzeigt werden
+-- (null WErte als "unbekannt anzeigen"????)
+
+Select Vater, Mutter
+From Familienbaum Where 
+Name in (Select Vater
+        From Familienbaum
+        Where Name = 'Anke'
+        union
+        Select Mutter
+        From Familienbaum
+        Where Name = 'Anke')
+union
+Select Vater, Mutter
+From Familienbaum
+Where Name = 'Anke';
+
+--3. Fomulieren Sie Ihr SQL-Abfragen u den Aufgaben 18 and 32 a), b) und e) aus dem Praktikumsblatt #2 anders!
+
+ 
+--a)keine??
+--b)Finde die Nummern der Lieferanten, die Teile mit den Nummern P1 oder P2 liefern
+Select SNO
+From SPJ
+Where PNO = 'P1' or PNO = 'P2';
+
+--c)Finde die Projektnummern der Projekte, die keinen Lieferanten am Ort haben 
+Select JNO
+From J
+Where City in(Select City
+            From J
+            minus
+            Select City
+            From S);
+--d) Finde die Lieferantennamen der Lieferanten, die das Projekt mit der Nummer J1 beliefert haben
+Select SName
+From S, J
+Where J.City = S.City
+And J.JNO = 'J1';
+
+--e) Finde die Projektnummern der Projekte, die am gleichen Ort sind wie das Projekt mit der Nummer J3
+
+Select JNO
+From J
+Where City ='Athens';
+
+--f) Finde die Lieferantennummern der Lieferanten, die mindestens die Teile mit den Teilenummern P1 und P6 liefern
+mindesten??
+
+Select SNO
+From SPJ
+Where PNO ='P1' and PNO = 'P6';
+Where City ='Athens';
+
+--32 
+a)
+b)
+c)
