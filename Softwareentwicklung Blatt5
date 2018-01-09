@@ -1,0 +1,191 @@
+class ChristmasTree {
+  public static void main(String[] args) {
+
+    StringBuilder builder = new StringBuilder();
+
+    if (args[0].equals("help")) {
+      builder.append("Usage: java ChristmasTree <height> <option>\n");
+      builder.append("Options: candles <number of candles> <candle character>\n");
+      builder.append("         frame <frame character>\n");
+      builder.append("         clone <number of trees (original + clones)>");
+      //Frage: Warum brauch ich beim letzten builder.append keinen Zeilenumbruch mehr?
+    } else {
+
+      int eingabe = Integer.parseInt(args[0]);
+
+      if (eingabe <= 2) {
+        builder.append("too small");
+      } else {
+
+        //Frage: Muss ich außerhalb definieren wegen Gültigkeitsbereich?
+        String option = (args[1]);
+        int anzahlKerzen = 0;
+        String zeichen = "";
+        int anzahlClone = 0;
+
+        if ((!args[1].equals("candles"))
+            && (!args[1].equals("frame")) && (!args[1].equals("clone"))) {
+          builder.append("Unknown option: ");
+          builder.append(args[1]);
+        } else {
+
+          if (args[1].equals("candles")) {
+            anzahlKerzen = Integer.parseInt(args[2]);
+            zeichen = (args[3]);
+          }
+          if (args[1].equals("frame")) {
+            zeichen = (args[2]);
+          }
+          if (args[1].equals("clone")) {
+            anzahlClone = Integer.parseInt(args[2]);
+          }
+
+          //Berechnung Breite und Position des Stammes
+          int breite = (((eingabe / 10) * 2) + 1); //Algorithmus. 1-9->1, 10-19->3, 20-29->5 usw....
+          int position = ((((eingabe * 2) - 1) / 2) - (breite / 2));
+
+          //Berechnung Anzahl der Sterne
+          double anzahlSterne = 0;
+          double anzahlSterneBleiben = 0;
+          double sterneZwischenKerzen = 0;
+
+          //zaehler für Verteilung der Sterne (Stene müssen immer gleichen Abstand haben)
+          int zaehler = 0;
+          anzahlSterne = ((eingabe - 1) * (eingabe - 1));
+          anzahlSterneBleiben = anzahlSterne - anzahlKerzen;
+          sterneZwischenKerzen = Math.ceil(anzahlSterneBleiben / anzahlKerzen);
+
+          //switch zu candles, frame und clone
+          switch (args[1]) {
+
+            //BaummMitKerzen
+            case "candles":
+              for (int i = 1; i < eingabe; i++) {
+                for (int whitespaces = 1; whitespaces < eingabe - i; whitespaces++) {
+                  builder.append(" ");
+                }
+                //((i*2)-1) Anzahl * zur eingabe, 1->1, 2->3, 3->5, 4->7 usw.
+                for (int stars = 1; stars <= ((i * 2) - 1); stars++) {
+                  zaehler = zaehler + 1;
+                  if ((zaehler % (sterneZwischenKerzen + 1)) == 0) {
+                    builder.append(zeichen);
+                  } else {
+                    builder.append("*");
+                  }
+                }
+                builder.append("\n");
+              }
+
+              //BaumstammVonBaumMitKerzen
+              for (int whitespacesStamm = 1; whitespacesStamm < position;
+                  whitespacesStamm++) { //(eingabe*2)-1) = Anzahl Sterne letzt Zeile
+                builder.append(" "); // :2 - breite 2
+              }
+              for (int baumStamm = 0; baumStamm < breite; baumStamm++) {
+                builder.append("I");
+              }
+              break;
+
+            //BaumMitRahmen
+            case "frame":
+              for (int rahmenOben = 1; rahmenOben < eingabe * 2; rahmenOben++) {
+                builder.append(zeichen);
+              }
+              for (int i = 0; i < eingabe; i++) { //erstesZeichenJederZeile
+                builder.append(zeichen);
+
+                for (int whitespaces = 0; whitespaces < eingabe - i; whitespaces++) {
+                  if (i == 0) { //in erster Zeile keine Leerzeichen
+                    continue;
+                  }
+                  builder.append(" ");
+                }
+
+                for (int stars = 1; stars <= ((i * 2) - 1); stars++) {
+                  builder.append("*");
+                }
+                for (int whitespacesZwei = 0; whitespacesZwei < eingabe - i; whitespacesZwei++) {
+                  if (i == 0) { //in erster Zeile keine Leerzeichen
+                    continue;
+                  }
+                  builder.append(" ");
+                }
+                builder.append(zeichen);
+                builder.append("\n");
+              }
+
+              //BaumstammfürBauMitRahmen
+              builder.append(zeichen);
+              builder.append(" ");
+
+              for (int whitespacesStamm = 1; whitespacesStamm < position;
+                  whitespacesStamm++) { //(eingabe*2)-1) = Anzahl Sterne letzt Zeile
+                builder.append(" "); // :2 - breite 2
+              }
+              for (int baumStamm = 0; baumStamm < breite; baumStamm++) {
+                builder.append("I");
+              }
+              for (int whitespacesDrei = 0; whitespacesDrei < position; whitespacesDrei++) {
+                builder.append(" ");
+              }
+              builder.append(zeichen);
+              builder.append("\n");
+
+              for (int rahmenUnten = 0; rahmenUnten <= eingabe * 2; rahmenUnten++) {
+                builder.append(zeichen);
+              }
+              break;
+
+            //BaumGeclont
+            case "clone":
+              for (int i = 1; i < eingabe; i++) {
+                for (int zaehlerClone = 0; zaehlerClone < anzahlClone; zaehlerClone++) {
+                  for (int whitespaces = 1; whitespaces < eingabe - i; whitespaces++) {
+                    builder.append(" ");
+                  }
+                  //((i*2)-1) Anzahl * zur eingabe, 1->1, 2->3, 3->5, 4->7 usw.
+                  for (int stars = 1; stars <= ((i * 2) - 1); stars++) {
+                    builder.append("*");
+                  }
+                  if (zaehlerClone < anzahlClone - 1) { //keine Leerzeiche hinter letzte Baum
+                    for (int whitespacesZwei = 0; whitespacesZwei < eingabe - i;
+                        whitespacesZwei++) {
+                      builder.append(" ");
+                    }
+                  }
+                }
+                builder.append("\n");
+              }
+
+              //Baumstamm
+              for (int zaehlerCloneStamm = 0; zaehlerCloneStamm < anzahlClone;
+                  zaehlerCloneStamm++) {
+                zaehler = zaehler + 1;
+
+                for (int whitespacesStamm = 1; whitespacesStamm < position;
+                    whitespacesStamm++) { //(eingabe*2)-1) = Anzahl Sterne letzt Zeile
+                  builder.append(" "); // :2 - breite 2
+                }
+                for (int baumStamm = 0; baumStamm < breite; baumStamm++) {
+                  builder.append("I");
+                }
+                if (zaehler < anzahlClone) {
+                  for (int whitespacesStammZwei = 0; whitespacesStammZwei < position;
+                      whitespacesStammZwei++) {
+                    builder.append(" ");
+                  }
+                }
+              }
+              break;
+
+            default:
+              builder.append("IllegalArgument");
+          } //Klammer zu für switch-Anweisung
+
+
+        }
+      }
+    }
+    System.out.println(builder);
+  }
+}
