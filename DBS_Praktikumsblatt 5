@@ -1,0 +1,150 @@
+Drop Table Tours;
+Drop Table Bus_Station;
+Drop Table Passengers;
+Drop Table Cities;
+
+CREATE TABLE TOURS
+(T_ID Integer,
+P_ID Integer,
+T_Date Varchar(30),
+Fromm Integer,
+Too Integer,
+Price Integer);
+
+Create Table Bus_Station
+(BS_ID Integer,
+BS_Name Varchar(30),
+Cit Varchar (30));
+
+Create Table Passengers
+(P_ID Integer,
+P_Name Varchar(30),
+Born Varchar(30),
+Gender Varchar(30));
+
+Create Table Cities
+(City Varchar(30),
+Country Varchar(30),
+C_ID Integer);
+
+
+Insert Into Tours
+Values (1,1,'30.12.14',2,3,10);
+
+Insert Into Tours
+Values (2,1,'02.01.15',5,2,9);
+
+Insert Into Tours
+Values (3,1,'31.12.14',3,4,15);
+
+Insert Into Tours
+Values (4,1,'02.01.15',4,6,20);
+
+Insert Into Tours
+Values (5,2,'02.01.15',1,5,10);
+
+Insert Into Tours
+Values (6,2,'31.12.14',5,1,23);
+
+Insert Into Tours
+Values (7,3,'20.12.14',3,2,15);
+
+Insert Into Tours
+Values (8,6,'10.01.15',1,4,20);
+
+Insert Into Tours
+Values (9,6,'10.01.15',4,5,15);
+
+Insert Into Tours
+Values (10,3,'07.01.15',3,4,20);
+
+Insert Into Bus_Station
+Values(1,'Hbf','Munich');
+
+Insert Into Bus_Station
+Values(2,'ZOB','Munich');
+
+Insert Into Bus_Station
+Values(3,'HbF','Augsburg');
+
+Insert Into Bus_Station
+Values(4,'HbF','Zurich');
+
+Insert Into Bus_Station
+Values(5,'ZOB','Berlin');
+
+Insert Into Bus_Station
+Values(6,'HbF','Berlin');
+
+
+Insert Into Passengers
+Values(1,'Mickey','1990','M');
+
+Insert Into Passengers
+Values(2,'Miney','1994','W');
+
+Insert Into Passengers
+Values(3,'Kitty','1997','W');
+
+Insert Into Passengers
+Values(4,'Donald','1998','M');
+
+Insert Into Passengers
+Values(5,'Donovan','1990','M');
+
+Insert Into Passengers
+Values(6,'Daisy','2001','W');
+
+
+Insert Into Cities
+Values ('Munich','Germany',1);
+
+Insert Into Cities
+Values ('Augsburg','Germany',2);
+
+Insert Into Cities
+Values ('Berlin','Germany',3);
+
+Insert Into Cities
+Values ('Zurich','Switzerland',4);
+
+--Aufgabe 1
+
+Alter Table Cities
+ADD Einwohnerzahl Integer;
+
+
+--Aufgabe 2
+
+ALTER TABLE table_name
+DROP COLUMN Einwohnerzahl;
+
+--Aufgabe 3
+--Welcher Passagier ist wie oft in verschiedenen Städten
+--eingestiegen
+Select Passengers.P_NAME, Count(Tours.Fromm)
+From Tours, Passengers
+Where tours.P_ID = passengers.P_ID
+Group by Passengers.P_Name;
+
+--ausgestiegen
+Select Passengers.P_NAME, Count(Tours.TOO)
+From Tours, Passengers
+Where tours.P_ID = passengers.P_ID
+Group by Passengers.P_Name;
+
+--umgestiegen
+Select *--Passengers.P_NAME--, Count(Tours.TOO)
+From Tours, Passengers
+--Where tours.P_ID = passengers.P_ID;
+Where Tours.Too IN Tours.Fromm;
+--Group by Passengers.P_Name;
+
+
+
+
+
+
+
+
+
