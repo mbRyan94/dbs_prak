@@ -140,11 +140,72 @@ From Tours, Passengers
 Where Tours.Too IN Tours.Fromm;
 --Group by Passengers.P_Name;
 
+/*Teil von Mike ab Aufgabe 3*/
 
+--Aufg 3 Umsteigen
+--todo: Geht noch nicht
+Select P_Name
+From Tours t, Passengers p
+Where t.P_ID = p.P_ID
+and (
+Select P_ID
+From Tours
+Where too in (Select fromm
+From Tours);
 
+Select P_ID, count(*)
+From Tours
+Where too in (Select fromm
+From Tours)
+Group by P_ID;
 
+--Aufg5
+Select P_ID, Sum(Price) as Summe
+From Tours
+Group by P_ID;
 
+--Aufg6
+--Ausgabe des Namens der jeweiligen Person - distinct verwendet, weil der Name sonst mehrfach angezeigt wird
+Select  distinct Passengers.P_NAME
+From Tours, Passengers
+Where Passengers.P_ID in (Select P_ID
+                 From Tours
+                Where (t_date between '24.12.14' and '31.12.14' and fromm between 1 and 2) and too between 5 and 6);
 
+--Ausgabe der P_ID
+Select P_ID, t_date
+From Tours
+Where (t_date between '24.12.14' and '31.12.14' and fromm between 1 and 2) and too between 5 and 6;
 
+--Aufg7
 
+-- Frage: Kann man Munich und Augsburg iwie zusammenfassen und nur eine Zeile ausgeben?
+Select Bus_Station.CITY, Count(Tours.TOO) as Ankünfte,
+    Case
+        When Bus_Station.CITY in ('Munich', 'Augsburg') then 'Bayern'
+        When Bus_Station.CITY in 'Zurich' then 'Kanton Zürich'
+        When Bus_Station.CITY in 'Berlin' then 'Berlin'
+        Else 'Kein Bundesland'
+    End as Bundesland
+From Tours
+Inner Join Bus_Station on Tours.Too = Bus_Station.BS_ID
+Group by BUS_STATION.CITY
+Order by Bundesland asc;
 
+--Aufg8
+--Ist hier vll was anders gefragt?
+Select avg(t.price) as Durchschnittspreis
+From Tours t;
+
+--Aufg9
+Select Passengers.p_name, count(Tours.p_id) as Anzahl_Fahrten,
+    Case
+        When count(Tours.p_id) > 5 then 'häufig'
+        When count(Tours.p_id) between 2 and 5 then 'mäßig'
+        When count(Tours.p_id) < 2 then 'selten'
+        else 'keine Fahrten'
+    End as Häufigkeit
+From Tours
+inner join Passengers on Passengers.P_id = Tours.P_id
+Group by Passengers.p_name
+Order by Anzahl_Fahrten desc;
