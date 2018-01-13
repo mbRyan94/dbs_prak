@@ -209,3 +209,39 @@ From Tours
 inner join Passengers on Passengers.P_id = Tours.P_id
 Group by Passengers.p_name
 Order by Anzahl_Fahrten desc;
+
+--Aufg10
+--Klappt, aber es ist noch eine Spalte (B_id) mit drin.
+--Frage: Wie kann ich Gruppieren, wenn ich diese Spalte rauslasse?
+Create View Bus_Fahrgäste as
+Select BUS_STATION.BS_ID, count(Tours.fromm) as Anzahl_Passagiere,
+    Case
+        When Bus_Station.BS_Id = 1 then 'HBF München'
+        When Bus_Station.BS_Id = 2 then 'ZOB München'
+        When Bus_Station.BS_Id = 3 then 'HBF Augsburg'
+        When Bus_Station.BS_Id = 4 then 'HBF Zürich'
+        When Bus_Station.BS_Id = 5 then 'ZOB Berlin'
+        When Bus_Station.BS_Id = 6 then 'HBF Berlin'
+        Else 'Kein Bahnhof'
+    End as Bus_Stationen
+From Tours, Bus_Station
+Where Tours.FROMM = Bus_Station.BS_ID
+Group by BUS_STATION.BS_ID;
+--Anzeigen der neuen View
+Select *
+From BUS_FAHRGÄSTE;
+
+--Aufg11
+Select count(Passengers.BORN), Gender
+From Passengers
+Where 2017 - Passengers.born < 18
+Group by Gender;
+
+--Aufg12
+--Teilschritt: Alle, die am selben Tag 2mal gefahren sind
+--todo: noch nicht fertig
+Select t.t_date, P_id
+From Tours t
+Group by t.t_date, P_id
+Having count(t.t_date) > 1
+;
