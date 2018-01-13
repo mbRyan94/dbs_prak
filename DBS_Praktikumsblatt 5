@@ -238,10 +238,8 @@ Where 2017 - Passengers.born < 18
 Group by Gender;
 
 --Aufg12
---Teilschritt: Alle, die am selben Tag 2mal gefahren sind
---todo: noch nicht fertig
-Select t.t_date, P_id
-From Tours t
-Group by t.t_date, P_id
-Having count(t.t_date) > 1
+--mit Self Join gelöst
+Select *
+From Tours t, Tours ts
+Where t.fromm = ts.too and t.too = ts.fromm and t.t_date = ts.T_DATE
 ;
