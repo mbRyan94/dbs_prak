@@ -1,0 +1,249 @@
+Drop Table Tours;
+Drop Table Bus_Station;
+Drop Table Passengers;
+Drop Table Cities;
+
+CREATE TABLE TOURS
+(T_ID Integer,
+P_ID Integer,
+T_Date Varchar(30),
+Fromm Integer,
+Too Integer,
+Price Integer);
+
+Create Table Bus_Station
+(BS_ID Integer,
+BS_Name Varchar(30),
+Cit Varchar (30));
+
+Create Table Passengers
+(P_ID Integer,
+P_Name Varchar(30),
+Born Varchar(30),
+Gender Varchar(30));
+
+Create Table Cities
+(City Varchar(30),
+Country Varchar(30),
+C_ID Integer);
+
+
+Insert Into Tours
+Values (1,1,'30.12.14',2,3,10);
+
+Insert Into Tours
+Values (2,1,'02.01.15',5,2,9);
+
+Insert Into Tours
+Values (3,1,'31.12.14',3,4,15);
+
+Insert Into Tours
+Values (4,1,'02.01.15',4,6,20);
+
+Insert Into Tours
+Values (5,2,'02.01.15',1,5,10);
+
+Insert Into Tours
+Values (6,2,'31.12.14',5,1,23);
+
+Insert Into Tours
+Values (7,3,'20.12.14',3,2,15);
+
+Insert Into Tours
+Values (8,6,'10.01.15',1,4,20);
+
+Insert Into Tours
+Values (9,6,'10.01.15',4,5,15);
+
+Insert Into Tours
+Values (10,3,'07.01.15',3,4,20);
+
+Insert Into Bus_Station
+Values(1,'Hbf','Munich');
+
+Insert Into Bus_Station
+Values(2,'ZOB','Munich');
+
+Insert Into Bus_Station
+Values(3,'HbF','Augsburg');
+
+Insert Into Bus_Station
+Values(4,'HbF','Zurich');
+
+Insert Into Bus_Station
+Values(5,'ZOB','Berlin');
+
+Insert Into Bus_Station
+Values(6,'HbF','Berlin');
+
+
+Insert Into Passengers
+Values(1,'Mickey','1990','M');
+
+Insert Into Passengers
+Values(2,'Miney','1994','W');
+
+Insert Into Passengers
+Values(3,'Kitty','1997','W');
+
+Insert Into Passengers
+Values(4,'Donald','1998','M');
+
+Insert Into Passengers
+Values(5,'Donovan','1990','M');
+
+Insert Into Passengers
+Values(6,'Daisy','2001','W');
+
+
+Insert Into Cities
+Values ('Munich','Germany',1);
+
+Insert Into Cities
+Values ('Augsburg','Germany',2);
+
+Insert Into Cities
+Values ('Berlin','Germany',3);
+
+Insert Into Cities
+Values ('Zurich','Switzerland',4);
+
+--Aufgabe 1
+
+Alter Table Cities
+ADD Einwohnerzahl Integer;
+
+
+--Aufgabe 2
+
+ALTER TABLE table_name
+DROP COLUMN Einwohnerzahl;
+
+--Aufgabe 3
+--Welcher Passagier ist wie oft in verschiedenen Städten
+--eingestiegen
+Select Passengers.P_NAME, Count(Tours.Fromm)
+From Tours, Passengers
+Where tours.P_ID = passengers.P_ID
+Group by Passengers.P_Name;
+
+--ausgestiegen
+Select Passengers.P_NAME, Count(Tours.TOO)
+From Tours, Passengers
+Where tours.P_ID = passengers.P_ID
+Group by Passengers.P_Name;
+
+
+
+--Aufgabe 5
+--Zeigen Sie die Gesamteinnahmen pro Fahrgast. Die umsatzstärksten Fahrgäste sollen als erste gezeigt werden.
+
+Select p.p_name, sum(t.Price) as Gesamteinnahmen
+From Tours t, Passengers p
+Where p.P_ID = t.P_ID
+Group by p.p_name
+Order by sum(Price) desc;
+
+--Aufgabe 6
+--Zeigen Sie alle Passagiere, die zwischen Weihnachten und Neujahr direkt von München nach Berlin gefahren sind.
+
+--Geht so nicht. Wenn ich die klammern verändere kommne immer wieder neue Werte dazu
+Select distinct P.P_Name
+From Tours t, Passengers p
+Where T.P_ID = P.P_ID
+And T.T_Date between '24.12.14' and '31.12.14'
+And (T.Fromm = 1 or T.Fromm = 2) 
+And  (T.Too = 5 or T.Too = 5);
+
+--Oder verschachtelt
+Select distinct P.P_Name
+From Passengers P, Tours T
+Where P.P_ID IN
+    (Select P_ID
+    From Tours 
+    Where T_Date between '24.12.14' and '31.12.14'
+    And (Fromm = 1 or Fromm = 2)
+    And  (Too = 5 or Too = 5));
+
+--Aufgabe 7
+--München und Augsburg liegen in Bayern, Zürich in Kanton Zürich und Berlin im
+--Bundesland Berlin. Erstellen Sie eine Statistik mit der Anzahl der angekommenen
+--Fahrgäste pro Bundesland / Kanton mit der Benutzung des CASE-Konstrukts (keine
+--zusätzlichen Spalten oder keine Referrenz-Tabellen).
+
+--@Mike Wie funktioniert Aufgabe 7 ohne Order by Case......
+Select B.City, Count (T.Too) AS Ankünfte
+From Tours T
+Inner Join Bus_Station B on B.BS_ID = T.Too
+Group by B.City;
+
+Select Count (T.Too) AS Ankünfte,
+    Case
+        When B.City = 'Munich'  Then 'Bayern'
+        When B.City = 'Augsburg' Then 'Bayern'
+        When B.City = 'Zurich' Then 'Kanton Zürich'
+        when B.City = 'Berlin' Then 'Berlin'
+    End As Bundeslaender
+From Tours T
+Inner Join Bus_Station B on B.BS_ID = T.Too 
+Group by Case When B.City = 'Munich' Then 'Bayern' When B.City = 'Augsburg' Then 'Bayern' When B.City = 'Zurich' Then 'Kanton Zürich' when B.City = 'Berlin' Then 'Berlin' End;
+
+
+--Aufgabe 8
+--Wie hoch ist der durchschnittliche Preis für direkte Verbindungen (einfache Fahrten)?
+--Die,die umsteigen müssen noch rausgenommen werden
+Select avg(price)
+From Tours;
+
+--Aufgabe 9
+--Nehmen Sie folgende Fahrgast-Klassifizierung vor:
+-- häufig – ab 5 Fahrten pro Jahr
+-- mäßig – zwischen 2 und 5 Fahrten pro Jahr
+-- selten - weniger als 2 Fahrten
+
+--Warum geht hier keine Gruppierung by Case...
+
+Select P.P_Name, count(T.T_ID) AS Fahrten,
+    Case
+        When Count(T.T_ID) >= 4 Then 'häufig'
+        When Count(T.T_ID) between 2 and 4 Then 'mäßig'
+        When Count (T.T_ID) < 2 Then 'selten'
+    End As Häufigkeiten
+From Tours T
+Inner Join Passengers P on P.P_ID = T.P_ID
+Group by P.P_Name;
+
+--Aufgabe 10
+--Erstellen Sie eine View, die Anzahl der abgefertigten Fahtgäste pro Bus-Bahnhof
+--zeigt und folgende Struktur hat. Achten Sie dabei auf die Sortierung.
+
+Select  B.BS_Name, B.City as BusStation, Count(T.Fromm) AS Passengers
+From Tours T
+Inner Join Bus_Station B on T.Fromm = B.BS_ID
+Group by  B.BS_Name, B.City, ( B.City);
+--Alternativ 
+Create View FahrgästeBusBahnhof as
+Select  Count(T.Fromm) AS Passengers,
+    Case
+        When B.BS_ID = 1 Then 'HbF Munich'
+        When B.BS_ID = 2 Then 'ZOB Munich'
+        When B.BS_ID = 3 Then 'HbF Augsburg'
+        When B.BS_ID = 4 Then 'HbF Zurich'
+        When B.BS_ID = 5 Then 'ZOB Berlin'
+        When B.BS_ID = 6 Then 'HbF Berlin'
+    End AS Bus_Station
+From Tours T
+Inner Join Bus_Station B on T.Fromm = B.BS_ID group by Case When B.BS_ID = 1 Then 'HbF Munich' When B.BS_ID = 2 Then 'ZOB Munich' When B.BS_ID = 3 Then 'HbF Augsburg' When B.BS_ID = 4 Then 'HbF Zurich' When B.BS_ID = 5 Then 'ZOB Berlin' When B.BS_ID = 6 Then 'HbF Berlin' End
+Order by Passengers DESC;
+
+Select *
+From FahrgästeBusBahnhof;
+
+--Aufgabe 12
+--Gibt es Passagiere, die am gleichen Tag hin und zürick gefahren sind?
+Select x.P_ID
+From Tours x
+Inner join Tours y on x.too= y.fromm
+And x.Fromm = y.Fromm
+And x.t_Date = y.T_date;
+
