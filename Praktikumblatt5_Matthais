@@ -241,9 +241,9 @@ From FahrgästeBusBahnhof;
 
 --Aufgabe 12
 --Gibt es Passagiere, die am gleichen Tag hin und zürick gefahren sind?
-Select x.P_ID
-From Tours x
-Inner join Tours y on x.too= y.fromm
+Select *
+From Tours x, Tours y 
+Where x.too= y.fromm
 And x.Fromm = y.Fromm
 And x.t_Date = y.T_date;
 
