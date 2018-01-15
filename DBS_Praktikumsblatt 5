@@ -213,6 +213,7 @@ Order by Anzahl_Fahrten desc;
 --Aufg10
 --Klappt, aber es ist noch eine Spalte (B_id) mit drin.
 --Frage: Wie kann ich Gruppieren, wenn ich diese Spalte rauslasse?
+-- --> Gesamten Case bist End in das Group by packen (siehe Lösung Matthias)
 Create View Bus_Fahrgäste as
 Select BUS_STATION.BS_ID, count(Tours.fromm) as Anzahl_Passagiere,
     Case
