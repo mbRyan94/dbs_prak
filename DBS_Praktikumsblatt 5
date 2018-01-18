@@ -133,31 +133,57 @@ From Tours, Passengers
 Where tours.P_ID = passengers.P_ID
 Group by Passengers.P_Name;
 
---umgestiegen
-Select *--Passengers.P_NAME--, Count(Tours.TOO)
-From Tours, Passengers
---Where tours.P_ID = passengers.P_ID;
-Where Tours.Too IN Tours.Fromm;
---Group by Passengers.P_Name;
-
-/*Teil von Mike ab Aufgabe 3*/
 
 --Aufg 3 Umsteigen
---todo: Geht noch nicht
-Select P_Name
-From Tours t, Passengers p
-Where t.P_ID = p.P_ID
-and (
-Select P_ID
-From Tours
-Where too in (Select fromm
-From Tours);
+Select t.P_id, count(t.t_date) as AnzahlUmstiege
+From Tours t, Tours ts
+where t.t_date = ts.t_date
+and t.p_id = ts.P_id
+and ts.fromm = t.too
+Group by t.P_id;
 
-Select P_ID, count(*)
-From Tours
-Where too in (Select fromm
-From Tours)
-Group by P_ID;
+--Aufg4
+--a
+Select distinct t.p_ID as Direktfahrer
+From Tours t, Bus_Station b
+where t.fromm  in
+                (Select t.fromm
+                from Bus_station b, Tours t
+                where City = 'Augsburg'
+                and T.fromm = b.BS_Id) and t.too in (Select t.too
+                                                    from Bus_station b, Tours t
+                                                    where City = 'Zurich'
+                                                    and T.too = b.BS_Id);
+
+--b
+--Daten der Tabelle verändert, damit was rauskommt
+Select t.P_id
+From tours t, bus_station b
+Where b.Bs_id = t.fromm and b.city = 'Augsburg'
+and t.too in (Select ts.fromm
+                From Tours ts, bus_station bs
+                Where bs.Bs_id = ts.too and bs.city = 'Zurich');
+
+
+--c
+/*
+*Vorgehen:
+from    to
+Augs    X1
+X1   =  X2
+X2      Zurich
+*Von oben und von unten X suchen und dann mit Schnittmenge ausgeben ("vergleichen")
+*/
+--X nach Zurich
+Select ts.fromm
+From Tours ts, bus_station bs
+Where bs.Bs_id = ts.too and bs.city = 'Zurich'
+intersect
+--von Augsburg nach X
+Select t.too
+From tours t, bus_station b
+Where b.Bs_id = t.fromm and b.city = 'Augsburg';
+
 
 --Aufg5
 Select P_ID, Sum(Price) as Summe
@@ -180,7 +206,7 @@ Where (t_date between '24.12.14' and '31.12.14' and fromm between 1 and 2) and t
 --Aufg7
 
 -- Frage: Kann man Munich und Augsburg iwie zusammenfassen und nur eine Zeile ausgeben?
-Select Bus_Station.CITY, Count(Tours.TOO) as Ankünfte,
+Select Count(Tours.TOO) as Ankünfte,
     Case
         When Bus_Station.CITY in ('Munich', 'Augsburg') then 'Bayern'
         When Bus_Station.CITY in 'Zurich' then 'Kanton Zürich'
@@ -189,11 +215,10 @@ Select Bus_Station.CITY, Count(Tours.TOO) as Ankünfte,
     End as Bundesland
 From Tours
 Inner Join Bus_Station on Tours.Too = Bus_Station.BS_ID
-Group by BUS_STATION.CITY
+Group by (Case When Bus_Station.CITY in ('Munich', 'Augsburg') then 'Bayern' When Bus_Station.CITY in 'Zurich' then 'Kanton Zürich' When Bus_Station.CITY in 'Berlin' then 'Berlin' Else 'Kein Bundesland' End)
 Order by Bundesland asc;
 
 --Aufg8
---Ist hier vll was anders gefragt?
 Select avg(t.price) as Durchschnittspreis
 From Tours t;
 
@@ -211,9 +236,6 @@ Group by Passengers.p_name
 Order by Anzahl_Fahrten desc;
 
 --Aufg10
---Klappt, aber es ist noch eine Spalte (B_id) mit drin.
---Frage: Wie kann ich Gruppieren, wenn ich diese Spalte rauslasse?
--- --> Gesamten Case bist End in das Group by packen (siehe Lösung Matthias)
 Create View Bus_Fahrgäste as
 Select BUS_STATION.BS_ID, count(Tours.fromm) as Anzahl_Passagiere,
     Case
@@ -228,9 +250,11 @@ Select BUS_STATION.BS_ID, count(Tours.fromm) as Anzahl_Passagiere,
 From Tours, Bus_Station
 Where Tours.FROMM = Bus_Station.BS_ID
 Group by BUS_STATION.BS_ID;
+
 --Anzeigen der neuen View
-Select *
-From BUS_FAHRGÄSTE;
+Select Anzahl_Passagiere, Bus_Stationen
+From BUS_FAHRGÄSTE
+Order by Anzahl_Passagiere desc;
 
 --Aufg11
 Select count(Passengers.BORN), Gender
